@@ -315,7 +315,6 @@ graph LR
 Le projet utilise l'API JCDecaux pour les données Vélib'. Configuration dans `ingest_data.py` :
 
 ```python
-API_KEY = "f181de647beeff09ab27226e7169e95273dee1c0"
 API_URL = f"https://api.jcdecaux.com/vls/v1/stations?apiKey={API_KEY}"
 POLL_INTERVAL = 10  # secondes
 ```
