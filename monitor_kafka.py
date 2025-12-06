@@ -15,32 +15,27 @@ def monitor_topics() -> None:
     consumer = KafkaConsumer(bootstrap_servers=[BROKER])
 
     print(f"Monitoring Kafka topics on broker '{BROKER}' (refresh every {REFRESH_INTERVAL}s)")
-    print("Format: Topic-name, Partition-id, offset-id, timestamp\n")
 
     try:
         while True:
-            # Force metadata refresh
+            # refresh
             consumer.poll(timeout_ms=0)
 
             topics = sorted(admin.list_topics())
 
             for topic in topics:
-                # Optionnel : ignorer les topics internes
-                # if topic == "__consumer_offsets":
-                #     continue
-
                 partitions = consumer.partitions_for_topic(topic)
                 if not partitions:
                     continue
 
                 for p in sorted(partitions):
                     tp = TopicPartition(topic, p)
-                    # Récupérer l’offset de fin pour cette partition
+                    # offset at the end of each partition
                     end_offsets = consumer.end_offsets([tp])
                     offset = end_offsets.get(tp, 0)
                     ts = time.strftime("%Y-%m-%d %H:%M:%S")
 
-                    # Format exigé : Topic-name, Partition-id, offset-id, timestamp
+                    # Format: Topic-name, Partition-id, offset-id, timestamp
                     print(f"{topic},{p},{offset},{ts}")
 
             time.sleep(REFRESH_INTERVAL)

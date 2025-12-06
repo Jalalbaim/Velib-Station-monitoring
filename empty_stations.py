@@ -6,8 +6,8 @@ from typing import Dict, Any
 from kafka import KafkaConsumer, KafkaProducer
 
 BROKER = "localhost:9092"
-INPUT_TOPIC = "stations-status"   # événements de Q2
-OUTPUT_TOPIC = "empty-stations"   # événements de Q3
+INPUT_TOPIC = "stations-status"
+OUTPUT_TOPIC = "empty-stations"
 GROUP_ID = "velib-empty-detector"
 
 
@@ -65,7 +65,7 @@ def main() -> None:
         is_empty_now = available_bikes == 0
         was_empty = last_empty_state.get(station_number)
 
-        # First time we see this station: just record state, no event
+        # First time we see this station: record state and continue
         if was_empty is None:
             last_empty_state[station_number] = is_empty_now
             continue
